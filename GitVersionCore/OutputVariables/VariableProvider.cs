@@ -62,7 +62,14 @@
             };
 
             // Use ToLower() to fix a bug where Beta and beta are different in NuGet
-            variables[NuGetVersionV2] = variables[LegacySemVerPadded].ToLower();
+            if (semanticVersion.PreReleaseTag.HasTag())
+            {
+                variables[NuGetVersionV2] = variables[MajorMinorPatch] + "-beta" + variables[BuildMetaData];
+            }
+            else
+            {
+                variables[NuGetVersionV2] = variables[MajorMinorPatch];
+            }
             //variables[NuGetVersionV3] = variables[LegacySemVerPadded].ToLower(); // TODO: when v3 is released, determine what to use
             variables[NuGetVersion] = variables[NuGetVersionV2];
 

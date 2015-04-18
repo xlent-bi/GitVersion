@@ -31,5 +31,6 @@ namespace GitVersion
         public bool UpdateAssemblyInfo;
         public string UpdateAssemblyInfoFileName;
         public string AssemblyVersionFormat;      
+        public string BuildNumberVersionFormat;      
     }
 }

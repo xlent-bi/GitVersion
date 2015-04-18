@@ -22,7 +22,7 @@
             }
 
             writer(string.Format("Executing GenerateSetVersionMessage for '{0}'.", GetType().Name));
-            writer(GenerateSetVersionMessage(semanticVersion.ToString("f")));
+            writer(GenerateSetVersionMessage(semanticVersion.ToString("x")));
             writer(string.Format("Executing GenerateBuildLogOutput for '{0}'.", GetType().Name));
             foreach (var buildParameter in BuildOutputFormatter.GenerateBuildLogOutput(semanticVersion, this))
             {

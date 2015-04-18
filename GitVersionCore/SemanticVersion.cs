@@ -234,7 +234,8 @@ namespace GitVersion
                 case "l":
                     return PreReleaseTag.HasTag() ? string.Format("{0}-{1}", ToString("j"), PreReleaseTag.ToString("l")) : ToString("j");
                 case "lp":
-                    return PreReleaseTag.HasTag() ? string.Format("{0}-{1}", ToString("j"), PreReleaseTag.ToString("lp")) : ToString("j");
+                    return ToString("x");
+                    // return PreReleaseTag.HasTag() ? string.Format("{0}-{1}", ToString("j"), PreReleaseTag.ToString("lp")) : ToString("j");
                 case "f":
                     {
                         var buildMetadata = BuildMetaData.ToString();
@@ -247,6 +248,20 @@ namespace GitVersion
 
                         return !string.IsNullOrEmpty(buildMetadata) ? string.Format("{0}+{1}", ToString("s"), buildMetadata) : ToString("s");
                     }
+                case "x":
+                    {
+                        var commits = BuildMetaData.CommitsSinceTag;
+                        var commitsZeroPadded = commits.Value.ToString().PadLeft(4, '0');
+
+                        var versionString = ToString("j");
+                        if (PreReleaseTag.HasTag())
+                        {
+                            versionString += "-" + PreReleaseTag.Name + commitsZeroPadded;
+                        }
+
+                        return versionString;
+                    }
+                    
                 default:
                     throw new ArgumentException(string.Format("Unrecognised format '{0}'", format), "format");
             }
