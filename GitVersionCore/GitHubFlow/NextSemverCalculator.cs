@@ -47,13 +47,13 @@
                     yield return lastTaggedRelease.SemVer;
                     yield break;
                 }
-                defaultNextVersion = new SemanticVersion
-                {
-                    Major = lastTaggedRelease.SemVer.Major,
-                    Minor = lastTaggedRelease.SemVer.Minor,
-                    Patch = lastTaggedRelease.SemVer.Patch + 1
-                };
-                yield return defaultNextVersion;
+//                defaultNextVersion = new SemanticVersion
+//                {
+//                    Major = lastTaggedRelease.SemVer.Major,
+//                    Minor = lastTaggedRelease.SemVer.Minor,
+//                    Patch = lastTaggedRelease.SemVer.Patch + 1
+//                };
+//                yield return defaultNextVersion;
             }
 
             SemanticVersion fileVersion;
