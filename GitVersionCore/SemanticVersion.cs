@@ -2,6 +2,7 @@ namespace GitVersion
 {
     using System;
     using System.Text.RegularExpressions;
+    using log4net;
 
     public class SemanticVersion : IFormattable, IComparable<SemanticVersion>
     {
@@ -14,6 +15,7 @@ namespace GitVersion
         public int Patch;
         public SemanticVersionPreReleaseTag PreReleaseTag;
         public SemanticVersionBuildMetaData BuildMetaData;
+        private static readonly ILog logToFile = LogManager.GetLogger(typeof(VariableProvider));
 
         public SemanticVersion()
         {
@@ -257,6 +259,18 @@ namespace GitVersion
                         if (PreReleaseTag.HasTag())
                         {
                             versionString += "-" + PreReleaseTag.Name + commitsZeroPadded;
+                        }
+
+                        if (BuildMetaData.Branch.ToLower().StartsWith("beta"))
+                        {
+                            logToFile.DebugFormat("Beta branch name set");
+                            versionString = ToString("j");
+                            versionString += "-" + "beta" + commitsZeroPadded;
+                        }
+                        else if (BuildMetaData.Branch.ToLower().StartsWith("production"))
+                        {
+                            logToFile.DebugFormat("Production branch name set");
+                            versionString = ToString("j");
                         }
 
                         return versionString;

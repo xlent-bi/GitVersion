@@ -106,11 +106,6 @@ namespace GitVersion
                 }
 
                 var variables = VariableProvider.GetVariablesFor(semanticVersion, configuration);
-                
-                foreach (var variable in variables)
-                {
-                    logToFile.DebugFormat(variable.Key + ":" + variable.Value);
-                }
 
                 if (arguments.Output == OutputType.Json)
                 {
@@ -159,6 +154,11 @@ namespace GitVersion
                 if (gitPreparer.IsDynamicGitRepository)
                 {
                     DeleteHelper.DeleteGitRepository(gitPreparer.DynamicGitRepositoryPath);
+                }
+
+                foreach (var variable in variables)
+                {
+                    logToFile.DebugFormat(variable.Key + ":" + variable.Value);
                 }
             }
             catch (WarningException exception)

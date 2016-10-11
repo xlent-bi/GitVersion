@@ -35,7 +35,7 @@
         {
             var bmd = semanticVersion.BuildMetaData;
             var formatter = bmd.Branch == "develop" ? new CiFeedFormatter() : null;
-            
+
             var variables = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
                 {Major, semanticVersion.Major.ToString()},
