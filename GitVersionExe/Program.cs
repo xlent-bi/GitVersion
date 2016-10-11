@@ -156,6 +156,7 @@ namespace GitVersion
                     DeleteHelper.DeleteGitRepository(gitPreparer.DynamicGitRepositoryPath);
                 }
 
+                logToFile.DebugFormat("This is the content of GitVersion variables:");
                 foreach (var variable in variables)
                 {
                     logToFile.DebugFormat(variable.Key + ":" + variable.Value);
