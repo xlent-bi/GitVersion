@@ -1,6 +1,7 @@
 namespace GitVersion
 {
     using System;
+    using System.Configuration;
     using System.Text.RegularExpressions;
     using log4net;
 
@@ -261,13 +262,24 @@ namespace GitVersion
                             versionString += "-" + PreReleaseTag.Name + commitsZeroPadded;
                         }
 
-                        if (BuildMetaData.Branch.ToLower().StartsWith("beta"))
+                        var betaBranchName = ConfigurationManager.AppSettings["Beta-branch-name"];
+                        if (string.IsNullOrEmpty(betaBranchName))
+                        {
+                            betaBranchName = "beta"; // if no config value available
+                        }
+                        var productionBranchName = ConfigurationManager.AppSettings["Production-branch-name"];
+                        if (string.IsNullOrEmpty(productionBranchName))
+                        {
+                            productionBranchName = "production"; // if no config value available
+                        }
+
+                        if (BuildMetaData.Branch.ToLower().StartsWith(betaBranchName.ToLower()))
                         {
                             logToFile.DebugFormat("Beta branch name set");
                             versionString = ToString("j");
                             versionString += "-" + "beta" + commitsZeroPadded;
                         }
-                        else if (BuildMetaData.Branch.ToLower().StartsWith("production"))
+                        else if (BuildMetaData.Branch.ToLower().StartsWith(productionBranchName.ToLower()))
                         {
                             logToFile.DebugFormat("Production branch name set");
                             versionString = ToString("j");
