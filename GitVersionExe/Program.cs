@@ -7,14 +7,17 @@ namespace GitVersion
     using System.Linq;
     using System.Text;
     using GitVersion.Helpers;
+    using log4net;
 
     class Program
     {
         static StringBuilder log = new StringBuilder();
         const string MsBuild = @"c:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe";
+        private static readonly ILog logToFile = LogManager.GetLogger(typeof(Program));
 
         static void Main()
         {
+            log4net.Config.XmlConfigurator.Configure();
             var exitCode = Run();
 
             if (Debugger.IsAttached)
@@ -103,6 +106,7 @@ namespace GitVersion
                 }
 
                 var variables = VariableProvider.GetVariablesFor(semanticVersion, configuration);
+
                 if (arguments.Output == OutputType.Json)
                 {
                     switch (arguments.VersionPart)
@@ -150,6 +154,12 @@ namespace GitVersion
                 if (gitPreparer.IsDynamicGitRepository)
                 {
                     DeleteHelper.DeleteGitRepository(gitPreparer.DynamicGitRepositoryPath);
+                }
+
+                logToFile.DebugFormat("This is the content of GitVersion variables:");
+                foreach (var variable in variables)
+                {
+                    logToFile.DebugFormat(variable.Key + ":" + variable.Value);
                 }
             }
             catch (WarningException exception)

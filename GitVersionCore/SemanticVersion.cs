@@ -1,7 +1,9 @@
 namespace GitVersion
 {
     using System;
+    using System.Configuration;
     using System.Text.RegularExpressions;
+    using log4net;
 
     public class SemanticVersion : IFormattable, IComparable<SemanticVersion>
     {
@@ -14,6 +16,7 @@ namespace GitVersion
         public int Patch;
         public SemanticVersionPreReleaseTag PreReleaseTag;
         public SemanticVersionBuildMetaData BuildMetaData;
+        private static readonly ILog logToFile = LogManager.GetLogger(typeof(VariableProvider));
 
         public SemanticVersion()
         {
@@ -257,6 +260,29 @@ namespace GitVersion
                         if (PreReleaseTag.HasTag())
                         {
                             versionString += "-" + PreReleaseTag.Name + commitsZeroPadded;
+                        }
+
+                        var betaBranchName = ConfigurationManager.AppSettings["Beta-branch-name"];
+                        if (string.IsNullOrEmpty(betaBranchName))
+                        {
+                            betaBranchName = "beta"; // if no config value available
+                        }
+                        var productionBranchName = ConfigurationManager.AppSettings["Production-branch-name"];
+                        if (string.IsNullOrEmpty(productionBranchName))
+                        {
+                            productionBranchName = "production"; // if no config value available
+                        }
+
+                        if (BuildMetaData.Branch.ToLower().StartsWith(betaBranchName.ToLower()))
+                        {
+                            logToFile.DebugFormat("Beta branch name set");
+                            versionString = ToString("j");
+                            versionString += "-" + "beta" + commitsZeroPadded;
+                        }
+                        else if (BuildMetaData.Branch.ToLower().StartsWith(productionBranchName.ToLower()))
+                        {
+                            logToFile.DebugFormat("Production branch name set");
+                            versionString = ToString("j");
                         }
 
                         return versionString;
